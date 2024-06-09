@@ -6,11 +6,11 @@ Horror Squares is a simple yet thrilling game where you must collect coins aroun
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/11Yazan11/HorrorSquares.git
+    git clone https://github.com/11Yazan11/HORROR-SQUARES.git
     ```
 2. Navigate to the project directory:
     ```bash
-    cd HorrorSquares
+    cd HORROR-SQUARES
     ```
 3. Install the required dependencies:
     ```bash
