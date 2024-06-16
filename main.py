@@ -2,7 +2,6 @@ import pygame
 import math
 import random
 import time
-import ast
 
 
 pygame.init()
@@ -379,5 +378,4 @@ game = Game()
 with open("grids\grids.txt",'w') as file:
    file.write(str(game.grid))
 #.................   
-
 pygame.quit()
