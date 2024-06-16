@@ -1,10 +1,9 @@
-# GOAL OF THE GAME :
-# MUST GET COINS AROUND THE MAP, JUMPSCARE IF LOOSE...
-
 import pygame
 import math
 import random
 import time
+import ast
+
 
 pygame.init()
 
@@ -17,10 +16,11 @@ class Game:
 
         self.fps = 10
         self.score = 0
-        self.level = 1
+        self.level = 4
         self.level1time = None
         self.level2time = None
         self.level3time = None
+        self.level4time = None
 
         self.bg_start = True
         self.max_time = 200
@@ -55,6 +55,10 @@ class Game:
 
         self.bruh = pygame.mixer.Sound("bruh.mp3")
         self.bruh.set_volume(1)
+
+        self.lvl4song = pygame.mixer.Sound("song.mp3")
+        self.lvl4song.set_volume(1)
+        
 
     
 
@@ -95,6 +99,8 @@ class Game:
                 if self.level == 3:
                     self.ban.play(loops=-1) 
                 self.bg_start = False
+                if self.level == 4:
+                    self.lvl4song.play(loops=-1)
 
             if self.level == 1:
                 self.max_time = 200
@@ -103,12 +109,16 @@ class Game:
                 self.max_time = 230 
 
             if self.level == 3:
-                self.max_time = 300    
+                self.max_time = 300 
+
+            if self.level == 4:
+                self.max_time = 210       
 
             if self.time >= self.max_time:
                 self.loose()   
 
     def window(self, grid):
+        pressed = pygame.key.get_pressed()
         self.screen.fill((100, 30, 60))
         pygame.display.set_caption(f"HORROR SQUARES || FPS = {self.fps} || SCORE = {self.score} || LEVEL = {self.level} || TIME = {self.time} / {self.max_time} ||")
 
@@ -120,17 +130,23 @@ class Game:
             x = (i % grid_size) * cell_width
             y = (i // grid_size) * cell_height
             rect_zone = pygame.Rect(x, y, cell_width, cell_height)
+
+            # FOR EDITING...
+
             #if self.mouse_rect.colliderect(rect_zone) and pygame.mouse.get_pressed()[0] == 1:
-                #grid[i] = 1
+            #    grid[i] = 1
             #if self.mouse_rect.colliderect(rect_zone) and pygame.mouse.get_pressed()[2] == 1:
-                #grid[i] = 0
-            #if self.mouse_rect.colliderect(rect_zone) and pygame.mouse.get_pressed()[1] == 1:
-                #grid[i] = 3    
+            #    grid[i] = 0
+            #if self.mouse_rect.colliderect(rect_zone) and pressed[pygame.K_SPACE]:
+            #    grid[i] = 3  
+
+            #.....................      
             
             color = "black" if grid[i] == 0 else "white" if grid[i] == 1 else "red" if grid[i] == 2 else "yellow" if grid[i] == 3 else "blue"
             pygame.draw.rect(self.screen, color, rect_zone)
 
     def update_grid(self):
+        
         grid_size = int(math.sqrt(len(self.grid)))
         red_pos = self.grid.index(2)
 
@@ -241,6 +257,7 @@ class Game:
         self.run = False
 
     def levelsgrids(self):
+
         self.grid1 = [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 3,
                      1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
                      1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0,
@@ -304,8 +321,16 @@ class Game:
                       0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 3, 1, 1, 1, 0, 1, 1, 1,
                       0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
                       3, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 4]
+        
+        self.grid4 = [0, 2, 1, 1, 3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 3, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 3, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 3, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 3, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 3, 1, 1, 0, 1, 1, 0, 1, 1, 4, 4, 4, 1]
 
-        self.allgrids = [self.grid1, self.grid2, self.grid3]
+        # THE GRID FOR LEVEL 4 IS THE ONE WRITTEN IN THE TEXT FILE, WHEN THE CODE WAS LAST RUN.
+        with open("grids\grids.txt", "r") as file:
+            content = (file.read().strip())
+            self.grid4 = eval(content)
+        #................................    
+
+        self.allgrids = [self.grid1, self.grid2, self.grid3, self.grid4]
         
 
     def win(self):
@@ -313,10 +338,11 @@ class Game:
         self.mrbeast.stop()
         self.ahh.stop()
         self.ban.stop()
+        self.lvl4song.stop()
         self.win_sound.play()
         self.direction = ""
-        if self.level == 3:
-            self.level3time = self.time  
+        if self.level == 4:
+            self.level4time = self.time  
             pygame.display.set_caption(f' YOUR SKIBIDI TIMES : LEVEL 1 = {self.level1time} // LEVEL 2 = {self.level2time} // LEVEL 3 = {self.level3time}')
             pygame.display.flip()
             self.time = 0  
@@ -326,7 +352,10 @@ class Game:
             self.letsgosound.play()
             time.sleep(3.2)
             self.chinese.play()
-            time.sleep(7)
+            time.sleep(4)
+            pygame.display.set_caption(f' YOUR SKIBIDI TIMES : LEVEL 2 = {self.level2time} // LEVEL 3 = {self.level3time} // LEVEL 4 = {self.level4time}')
+            pygame.display.flip()
+            time.sleep(3)
             self.oui.play()
             time.sleep(7)
             self.run = False 
@@ -335,6 +364,8 @@ class Game:
                 self.level1time = self.time
             if self.level == 2:
                 self.level2time = self.time
+            if self.level == 3:
+                self.level3time = self.time    
             self.level += 1
             self.time = 0    
             self.bg_start = True      
@@ -343,4 +374,10 @@ class Game:
             self.grid[1] = 2                   
 
 game = Game()
+
+# ADD THE CURRENT GRID TO A TEXT FILE
+with open("grids\grids.txt",'w') as file:
+   file.write(str(game.grid))
+#.................   
+
 pygame.quit()
