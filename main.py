@@ -15,7 +15,7 @@ class Game:
 
         self.fps = 10
         self.score = 0
-        self.level = 4
+        self.level = 1
         self.level1time = None
         self.level2time = None
         self.level3time = None
